@@ -86,3 +86,19 @@ class evil:
 
     def __setitem__(self, i, x):
         self.corrupt[i] = struct.unpack("dd", x)
+
+
+@pytest.mark.parametrize(
+    "coords, expected",
+    [
+        ([0, 1, 2, 3], (0.0, 1.0, 2.0, 3.0)),
+        ([3, 2, 1, 0], (1.0, 0.0, 3.0, 2.0)),
+        (0, (0.0, 0.0, 0.0, 0.0)),
+        (1, (0.0, 0.0, 0.0, 0.0)),
+    ],
+)
+def test_getbbox(coords, expected):
+    # Arrange
+    p = ImagePath.Path(coords)
+    # Act / Assert
+    assert p.getbbox() == expected

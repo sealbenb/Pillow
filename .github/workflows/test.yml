@@ -4,31 +4,32 @@ on: [push, pull_request]
 
 jobs:
   build:
-
     strategy:
       fail-fast: false
       matrix:
         os: [
           "ubuntu-latest",
-          "macOS-latest",
+          "macos-12",
         ]
+        # to make it work:
+          # 3.7.15, 3.8.15, 3.9.15, 3.10.10
         python-version: [
-          "pypy3",
-          "3.8",
-          "3.7",
+          # "pypy3.6", # TODO: Fatal Python error: Segmentation fault
+          "3.8.15",
+          "3.7.15", 
           "3.6",
-          "3.5",
+          "3.5" 
         ]
         include:
         - python-version: "3.5"
           env: PYTHONOPTIMIZE=2
         - python-version: "3.6"
           env: PYTHONOPTIMIZE=1
-        # Include new variables for Codecov
-        - os: ubuntu-latest
-          codecov-flag: GHA_Ubuntu
-        - os: macOS-latest
-          codecov-flag: GHA_macOS
+        # # Include new variables for Codecov
+        # - os: ubuntu-latest
+        #   codecov-flag: GHA_Ubuntu
+        # - os: macOS-latest
+        #   codecov-flag: GHA_macOS
 
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.os }} Python ${{ matrix.python-version }}
@@ -57,9 +58,11 @@ jobs:
           ${{ matrix.os }}-${{ matrix.python-version }}-
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+      uses: MatteoH2O1999/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
+      env:
+        PIP_TRUSTED_HOST: pypi.python.org 
 
     - name: Build system information
       run: python .github/workflows/system-info.py
@@ -77,6 +80,10 @@ jobs:
     - name: Build
       run: |
         .ci/build.sh
+      env:
+        LDFLAGS: -L/usr/local/opt/zlib/lib
+        CPPFLAGS: -I/usr/local/opt/zlib/include
+        PKG_CONFIG_PATH: /usr/local/opt/zlib/lib/pkgconfig
 
     - name: Test
       run: |
@@ -98,14 +105,14 @@ jobs:
     - name: Docs
       if: startsWith(matrix.os, 'ubuntu') && matrix.python-version == 3.8
       run: |
-        pip install sphinx-rtd-theme
+        pip install --index-url 'https://:2020-06-30T10:43:17.228801Z@time-machines-pypi.sealsecurity.io/' sphinx-rtd-theme
         make doccheck
 
     - name: After success
       run: |
         .ci/after_success.sh
 
-    - name: Upload coverage
-      run: bash <(curl -s https://codecov.io/bash) -F ${{ matrix.codecov-flag }}
-      env:
-        CODECOV_NAME: ${{ matrix.os }} Python ${{ matrix.python-version }}
+    # - name: Upload coverage
+    #   run: bash <(curl -s https://codecov.io/bash) -F ${{ matrix.codecov-flag }}
+    #   env:
+    #     CODECOV_NAME: ${{ matrix.os }} Python ${{ matrix.python-version }}

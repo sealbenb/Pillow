@@ -207,8 +207,8 @@ cms_transform_new(cmsHTRANSFORM transform, char* mode_in, char* mode_out)
 
     self->transform = transform;
 
-    strcpy(self->mode_in, mode_in);
-    strcpy(self->mode_out, mode_out);
+    strncpy(self->mode_in, mode_in, 8);
+    strncpy(self->mode_out, mode_out, 8);
 
     return (PyObject*) self;
 }
@@ -281,8 +281,8 @@ findLCMStype(char* PILmode)
     }
 
     else {
-        /* take a wild guess... but you probably should fail instead. */
-        return TYPE_GRAY_8; /* so there's no buffer overrun... */
+        /* take a wild guess... */
+        return TYPE_GRAY_8;
     }
 }
 

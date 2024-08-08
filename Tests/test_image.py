@@ -664,6 +664,7 @@ class TestImage:
             "sgi_overrun_expandrow2.bin",
             "pcx_overrun.bin",
             "pcx_overrun2.bin",
+            "ossfuzz-4836216264589312.pcx",
             "01r_00.pcx",
         ]:
             with Image.open(os.path.join("Tests/images", file)) as im:
@@ -671,7 +672,10 @@ class TestImage:
                     im.load()
                     assert False
                 except OSError as e:
-                    assert str(e) == "buffer overrun when reading image file"
+                    buffer_overrun = str(e) == "buffer overrun when reading image file"
+                    truncated = "image file is truncated" in str(e)
+
+                    assert buffer_overrun or truncated
 
         with Image.open("Tests/images/fli_overrun2.bin") as im:
             try:

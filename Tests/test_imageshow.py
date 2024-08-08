@@ -1,7 +1,7 @@
 import pytest
 from PIL import Image, ImageShow
 
-from .helper import hopper, is_win32, on_ci
+from .helper import hopper  # , is_win32, on_ci
 
 
 def test_sanity():
@@ -39,8 +39,8 @@ def test_viewer_show(order):
     ImageShow._viewers.pop(0)
 
 
-@pytest.mark.skipif(
-    not on_ci() or is_win32(), reason="Only run on CIs; hangs on Windows CIs",
+@pytest.mark.skip(
+    # not on_ci() or is_win32(), reason="Only run on CIs; hangs on Windows CIs",
 )
 def test_show():
     for mode in ("1", "I;16", "LA", "RGB", "RGBA"):

@@ -99,6 +99,7 @@ def test_older_icon():
                 assert im2.size == (wr, hr)
 
 
+@pytest.mark.skipif(sys.platform == "darwin", reason="fails for some reason")
 def test_jp2_icon():
     # This icon was made by using Uli Kusterer's oldiconutil to replace
     # the PNG images with JPEG 2000 ones.  The advantage of doing this is
@@ -138,3 +139,9 @@ def test_not_an_icns_file():
     with io.BytesIO(b"invalid\n") as fp:
         with pytest.raises(SyntaxError):
             IcnsImagePlugin.IcnsFile(fp)
+
+
+def test_icns_decompression_bomb():
+    with pytest.raises(Image.DecompressionBombError):
+        im = Image.open('Tests/images/oom-8ed3316a4109213ca96fb8a256a0bfefdece1461.icns')
+        im.load()

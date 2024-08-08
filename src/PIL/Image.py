@@ -93,7 +93,7 @@ try:
     # and should be considered private and subject to change.
     from . import _imaging as core
 
-    if __version__ != getattr(core, "PILLOW_VERSION", None):
+    if __version__ != getattr(core, "PILLOW_VERSION", "").strip('"'):
         raise ImportError(
             "The _imaging extension was built for another version of Pillow or PIL:\n"
             "Core version: %s\n"
