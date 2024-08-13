@@ -28,6 +28,7 @@ repro_read_strip = (
     "Tests/images/crash-4f085cc12ece8cde18758d42608bed6a2a2cfb1c.tif",
     "Tests/images/crash-86214e58da443d2b80820cff9677a38a33dcbbca.tif",
     "Tests/images/crash-f46f5b2f43c370fe65706c11449f567ecc345e74.tif",
+    "Tests/images/crash-63b1dffefc8c075ddc606c0a2f5fdc15ece78863.tif",
 )
 
 for path in repro_read_strip:
