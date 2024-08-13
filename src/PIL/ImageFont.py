@@ -37,6 +37,9 @@ LAYOUT_BASIC = 0
 LAYOUT_RAQM = 1
 
 
+MAX_STRING_LENGTH = 1000000
+
+
 class _imagingft_not_installed:
     # module placeholder
     def __getattr__(self, id):
@@ -47,6 +50,12 @@ try:
     from . import _imagingft as core
 except ImportError:
     core = _imagingft_not_installed()
+
+
+def _string_length_check(text):
+    if MAX_STRING_LENGTH is not None and len(text) > MAX_STRING_LENGTH:
+        msg = "too many characters in string"
+        raise ValueError(msg)
 
 
 # FIXME: add support for pilfont2 format (see FontFile.py)
@@ -125,6 +134,7 @@ class ImageFont:
 
         :return: (width, height)
         """
+        _string_length_check(text)
         return self.font.getsize(text)
 
     def getmask(self, text, mode="", *args, **kwargs):
@@ -259,6 +269,7 @@ class FreeTypeFont:
 
         :return: (width, height)
         """
+        _string_length_check(text)
         size, offset = self.font.getsize(text, False, direction, features, language)
         return (
             size[0] + stroke_width * 2 + offset[0],
@@ -335,6 +346,7 @@ class FreeTypeFont:
 
         :return: A tuple of the x and y offset
         """
+        _string_length_check(text)
         return self.font.getsize(text)[1]
 
     def getmask(
@@ -468,6 +480,7 @@ class FreeTypeFont:
                  :py:mod:`PIL.Image.core` interface module, and the text offset, the
                  gap between the starting coordinate and the first marking
         """
+        _string_length_check(text)
         size, offset = self.font.getsize(
             text, mode == "1", direction, features, language
         )
@@ -569,6 +582,7 @@ class TransposedFont:
         self.orientation = orientation  # any 'transpose' argument, or None
 
     def getsize(self, text, *args, **kwargs):
+        _string_length_check(text)
         w, h = self.font.getsize(text)
         if self.orientation in (Image.ROTATE_90, Image.ROTATE_270):
             return h, w

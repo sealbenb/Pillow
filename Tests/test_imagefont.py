@@ -734,6 +734,24 @@ class TestImageFont:
         self._check_text(font, "Tests/images/variation_tiny_axes.png", 32.5)
 
 
+    def test_too_many_characters(self):
+        font = self.get_font()
+        with pytest.raises(ValueError):
+            font.getoffset("A" * 1000001)
+        with pytest.raises(ValueError):
+            font.getsize("A" * 1000001)
+        with pytest.raises(ValueError):
+            font.getmask2("A" * 1000001)
+
+        transposed_font = ImageFont.TransposedFont(font)
+        with pytest.raises(ValueError):
+            transposed_font.getsize("A" * 1000001)
+
+        default_font = ImageFont.load_default()
+        with pytest.raises(ValueError):
+            default_font.getsize("A" * 1000001)
+
+
 @skip_unless_feature("raqm")
 class TestImageFont_RaqmLayout(TestImageFont):
     LAYOUT_ENGINE = ImageFont.LAYOUT_RAQM
