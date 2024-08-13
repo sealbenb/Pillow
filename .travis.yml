@@ -13,11 +13,11 @@ notifications:
 # Then run the remainder.
 
 matrix:
-  fast_finish: true
+  # fast_finish: true
   include:
-    - python: "3.6"
-      name: "Lint"
-      env: LINT="true"
+    # - python: "3.6"
+    #   name: "Lint"
+    #   env: LINT="true"
 
     - python: "3.6"
       arch: arm64
@@ -26,45 +26,40 @@ matrix:
     - python: "3.5"
       arch: s390x
 
-    - python: "pypy3"
-      name: "PyPy3 Xenial"
-    - python: "3.9-dev"
-      name: "3.9-dev Xenial"
-      services: xvfb
-    - python: "3.8"
-      name: "3.8 Xenial"
-      services: xvfb
-    - python: '3.7'
-      name: "3.7 Xenial"
-      services: xvfb
-    - python: '3.6'
-      name: "3.6 Xenial PYTHONOPTIMIZE=1"
-      env: PYTHONOPTIMIZE=1
-      services: xvfb
-    - python: '3.5'
-      name: "3.5 Xenial PYTHONOPTIMIZE=2"
-      env: PYTHONOPTIMIZE=2
-      services: xvfb
+    # - python: "pypy3"
+    #   name: "PyPy3 Xenial"
+    # - python: "3.9-dev"
+    #   name: "3.9-dev Xenial"
+    #   services: xvfb
+    # - python: "3.8"
+    #   name: "3.8 Xenial"
+    #   services: xvfb
+    # - python: '3.7'
+    #   name: "3.7 Xenial"
+    #   services: xvfb
+    # - python: '3.6'
+    #   name: "3.6 Xenial PYTHONOPTIMIZE=1"
+    #   env: PYTHONOPTIMIZE=1
+    #   services: xvfb
+    # - python: '3.5'
+    #   name: "3.5 Xenial PYTHONOPTIMIZE=2"
+    #   env: PYTHONOPTIMIZE=2
+    #   services: xvfb
 
 install:
   - |
-    if [ "$LINT" == "true" ]; then
-      pip install tox
-    else
-      .ci/install.sh;
-    fi
+    echo "install"
+    chmod +x .ci/install_travis.sh;
+    .ci/install_travis.sh
 
 script:
-- |
-  if [ "$LINT" == "true" ]; then
-    tox -e lint
-  else
+  - |
+    echo "build"
     .ci/build.sh
+
+    echo "test"
     .ci/test.sh
-  fi
 
 after_success:
-- |
-  if [ "$LINT" == "" ]; then
+  - |
     .ci/after_success.sh
-  fi

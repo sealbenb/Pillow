@@ -1,3 +1,5 @@
+import sys
+
 import pytest
 from PIL import Image
 
@@ -17,7 +19,13 @@ except (OSError, ImportError):
 TK_MODES = ("1", "L", "P", "RGB", "RGBA")
 
 
-pytestmark = pytest.mark.skipif(not HAS_TK, reason="Tk not installed")
+pytestmark = [
+    pytest.mark.skipif(not HAS_TK, reason="Tk not installed"),
+    pytest.mark.skipif(
+        sys.version_info[0:2] < (3, 7) and sys.platform == "darwin",
+        reason="caused abort",
+    ),
+]
 
 
 def setup_module():

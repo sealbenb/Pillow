@@ -24,8 +24,8 @@ repos:
       - id: remove-tabs
         exclude: (Makefile$|\.bat$|\.cmake$|\.eps$|\.fits$|\.opt$)
 
-  - repo: https://gitlab.com/pycqa/flake8
-    rev: 735cfe7e1c57a8e05f660ba75de72313005af54a  # frozen: 3.8.2
+  - repo: https://github.com/PyCQA/flake8
+    rev: 3.8.2  # frozen: 3.8.2 (altered from gitlab using tag instead of original commit 735cfe7e1c57a8e05f660ba75de72313005af54a) - gitlab repo taken down https://www.reddit.com/r/Python/comments/yvfww8/flake8_took_down_the_gitlab_repository_in_favor/
     hooks:
       - id: flake8
         additional_dependencies: [flake8-2020, flake8-implicit-str-concat]
