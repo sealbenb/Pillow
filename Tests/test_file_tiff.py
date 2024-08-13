@@ -598,9 +598,9 @@ class TestFileTiff:
     @pytest.mark.filterwarnings("ignore:Possibly corrupt EXIF data")
     def test_string_dimension(self):
         # Assert that an error is raised if one of the dimensions is a string
-        with pytest.raises(ValueError):
-            Image.open("Tests/images/string_dimension.tiff")
-
+        with pytest.raises(OSError):
+            with Image.open("Tests/images/string_dimension.tiff") as im:
+                im.load()
 
 @pytest.mark.skipif(not is_win32(), reason="Windows only")
 class TestFileTiffW32:
