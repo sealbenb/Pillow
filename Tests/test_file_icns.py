@@ -139,3 +139,12 @@ def test_not_an_icns_file():
     with io.BytesIO(b"invalid\n") as fp:
         with pytest.raises(SyntaxError):
             IcnsImagePlugin.IcnsFile(fp)
+
+
+def test_icns_decompression_bomb():
+    if not ENABLE_JPEG2K: # fails on some docker test build (amazon-1-amd64)
+        return
+
+    with pytest.raises(Image.DecompressionBombError):
+        im = Image.open('Tests/images/oom-8ed3316a4109213ca96fb8a256a0bfefdece1461.icns')
+        im.load()
